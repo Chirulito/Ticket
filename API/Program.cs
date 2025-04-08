@@ -1,6 +1,5 @@
-using Ticket;
-
 using Microsoft.EntityFrameworkCore;
+using API;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,19 +12,18 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 try
-{   // add database-services (change parameter)
+{   // add database-services
 
-    builder.Services.AddDbContext<MainContext>(options =>
+    builder.Services.AddDbContext<TicketContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("OFFICE")));
 
+    Console.WriteLine("\nDatabase connection established!\n");
 }
 
 catch (Exception ex)
 {
-    Console.WriteLine(ex.Message);
+    Console.WriteLine("\nDatabase conecction failed...\n");
 }
-
-
 
 var app = builder.Build();
 
