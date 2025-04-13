@@ -1,0 +1,22 @@
+﻿@using API.Models;
+@model Ticket
+
+<h1>Editar Tickets</h1>
+
+<form asp-action="Editar" method="post">
+	<input asp-for="IdTicket" type="hidden" /> <!-- Campo oculto para el ID -->
+	<div>
+		<label>Id de Evento</label>
+		<input asp-for="IdEvent" class="form-control" />
+	</div>
+	<div>
+		<label>Codigo</label>
+		<input asp-for="Code" class="form-control" />
+	</div>
+	<div>
+		<label>Status</label>
+		<input asp-for="Status" class="form-control" />
+	</div>
+
+	<button type="submit" class="btn btn-primary">Actualizar</button>
+</form>

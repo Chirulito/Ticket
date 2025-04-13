@@ -1,0 +1,89 @@
+﻿@using API.Models;
+@model List<Invoice>
+
+@{
+	Layout = "_Layout";
+}
+
+
+
+<div class="col-md-12">
+
+
+	<div class="card">
+		@*<div class="card-header">
+		<h6 class="card-title">Recepción de Documentos</h6>
+		</div>*@
+
+		<div class="card-body">
+
+			<div class="row">
+				<div class="col-sm-6">
+					<label>Facturas</label>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="form-group">
+						<a button type="button" class="btn btn-sm" style="background-color:#001f3f;color:#ffffff" id="Btn" asp-area="" asp-controller="Invoices" asp-action="Crear">Crear Factura</a>
+
+					</div>
+
+				</div>
+
+			</div> <!-- Div de Row-->
+
+			<hr style="size:1px">
+
+
+			<div class="row">
+
+				<table id="invoice" class="display dataTable" style="width:100%">
+					<thead>
+						<tr>
+							<th>IdInvoice</th>
+							<th>IdUser</th>
+							<th>IdPaymentCategory</th>
+							<th>Date</th>
+							<th>Discount</th>
+							<th>Tax</th>
+							<th>Subtotal</th>
+							<th>Total</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var inv in Model)
+						{
+							<tr>
+								<td>@inv.IdInvoice</td>
+								<td>@inv.IdUser</td>
+								<td>@inv.IdPaymentCategory</td>
+								<td>@inv.Date</td>
+								<td>@inv.Discount</td>
+								<td>@inv.Tax</td>
+								<td>@inv.Subtotal</td>
+								<td>@inv.Total</td>
+								<td>
+									<a button type="button" class="btn btn-success" id="Btn" asp-area="" asp-controller="Events" asp-action="Editar" asp-route-id="@inv.IdInvoice">Editar Factura</a>
+									<a button type="button" class="btn btn-danger" id="Btn" asp-area="" asp-controller="Events" asp-action="Eliminar" asp-route-id="@inv.IdInvoice">Eliminar Factura</a>
+
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div> <!-- Div de Row-->
+			<hr style="size:1px">
+		</div>
+	</div>
+</div>
+
+
+
+
+@* }
+else
+{
+<p>No hay eventos disponibles.</p>
+} *@

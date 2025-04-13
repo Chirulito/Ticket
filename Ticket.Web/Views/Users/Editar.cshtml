@@ -1,0 +1,42 @@
+﻿@using API.Models;
+@model User
+
+<h1>Editar Usuarios</h1>
+
+<form asp-action="Editar" method="post">
+	<input asp-for="IdUser" type="hidden" /> <!-- Campo oculto para el ID -->
+	<div>
+		<label>Identification</label>
+		<input asp-for="Identification" class="form-control" />
+	</div>
+	<div>
+		<label>Primer Nombre</label>
+		<input asp-for="FirstName" class="form-control" />
+	</div>
+	<div>
+		<label>Primer Apellido</label>
+		<input asp-for="LastName1" class="form-control" />
+	</div>
+	<div>
+		<label>Segundo Apellido</label>
+		<input asp-for="LastName2" class="form-control" />
+	</div>
+	<div>
+		<label>Numero de Telefono</label>
+		<input asp-for="Phone" class="form-control" />
+	</div>
+	<div>
+		<label>Fecha de Nacimiento</label>
+		<input asp-for="BirthDate" class="form-control" />
+	</div>
+	<div>
+		<label>Email</label>
+		<input asp-for="Email" class="form-control" />
+	</div>
+	<div>
+		<label>Username</label>
+		<input asp-for="Username" class="form-control" />
+	</div>
+
+	<button type="submit" class="btn btn-primary">Actualizar</button>
+</form>

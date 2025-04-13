@@ -1,0 +1,38 @@
+﻿@using API.Models;
+@model Invoice
+
+<h1>Editar Factura</h1>
+
+<form asp-action="Editar" method="post">
+	<input asp-for="IdInvoice" type="hidden" /> <!-- Campo oculto para el ID -->
+	<div>
+		<label>ID de Usuario</label>
+		<input asp-for="IdUser" class="form-control" />
+	</div>
+	<div>
+		<label>ID de Categoria de Pago</label>
+		<input asp-for="IdPaymentCategory" class="form-control" />
+	</div>
+	<div>
+		<label>Fecha</label>
+		<input asp-for="Date" class="form-control" />
+	</div>
+	<div>
+		<label>Descuento</label>
+		<input asp-for="Discount" class="form-control" />
+	</div>
+	<div>
+		<label>Impuesto</label>
+		<input asp-for="Tax" class="form-control" />
+	</div>
+	<div>
+		<label>Subtotal</label>
+		<input asp-for="Subtotal" class="form-control" />
+	</div>
+	<div>
+		<label>Total</label>
+		<input asp-for="Total" class="form-control" />
+	</div>
+
+	<button type="submit" class="btn btn-primary">Actualizar</button>
+</form>

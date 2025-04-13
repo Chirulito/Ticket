@@ -11,11 +11,29 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
+
+
+builder.Services.AddCors(options =>
+{
+options.AddDefaultPolicy(policy =>
+{
+policy.AllowAnyOrigin()
+      .AllowAnyMethod()
+      .AllowAnyHeader();
+});
+});
+
+
+
+
+
+
 try
 {   // add database-services
 
     builder.Services.AddDbContext<TicketContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("OFFICE")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DESKTOP-F51BFTS")));
 
     Console.WriteLine("\nDatabase connection established!\n");
 }

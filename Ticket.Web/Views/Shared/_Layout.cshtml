@@ -1,0 +1,207 @@
+﻿<!DOCTYPE html>
+<!--
+This is a starter template page. Use this page to start your new project from
+scratch. This page gets rid of all links and provides the needed markup only.
+-->
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Venta de Tickets</title>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link href="~/plugins/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link href="~/plugins/fontawesome-free/css/brands.css" rel="stylesheet">
+    <link href="~/plugins/fontawesome-free/css/solid.css" rel="stylesheet">
+    <!-- Theme style -->
+    <link href="~/plugins/daterangepicker/daterangepicker.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/style_media.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" adminlte.min.css" />
+
+    <link href="~/css/datatables/datatables-1.13.8/jquery.datatables.css" rel="stylesheet" />
+    <link href="~/css/datatables/buttons-2.4.2/buttons.datatables.css" rel="stylesheet" />
+    <link href="~/css/datatables/responsive-2.5.0/responsive.datatables.css" rel="stylesheet" />
+
+    <link href="~/css/Spinner.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="~/plugins/select2/css/select2.min.css">
+    <link href="~/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/adminlte.min.css?v=3.2.0">
+
+    <link href="~/css/alertifyjs/alertify.min.css" rel="stylesheet" />
+
+</head>
+
+
+
+
+<body class="sidebar-mini layout-fixed control-sidebar-slide-open text-sm" style="height: auto;">
+    <div class="wrapper">
+
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light bg-info">
+            <!-- Left navbar links -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars" style="color:white"></i></a>
+                </li>
+
+            </ul>
+
+
+            <ul class="navbar-nav ml-auto"></ul>
+            <!-- Right navbar links -->
+            <ul class="navbar-nav ml-right">
+                <!-- Navbar Search -->
+
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link" style="color:white" data-toggle="dropdown">Configuración</a>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <div class="dropdown-divider"></div>
+                        <a asp-controller="PerfilUsuario" asp-action="Index" class="dropdown-item">
+                            <i class="fas fa-user mr-2"></i>Perfil de Usuario
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+
+
+
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4 ">
+            <!-- Brand Logo -->
+            <a href="index3.html" class="brand-link bg-info">
+                <img src="~/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                <span class="brand-text font-weight-light">Menú Principal</span>
+            </a>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Sidebar Menu -->
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar nav-child-indent flex-column" data-widget="treeview" role="menu">
+                        <li class="nav-item  ">
+                            <a href="#" class="nav-link ">
+                                <img src="~/img/ico/home.png" width="25" height="25"><p> Inicio</p>
+                            </a>
+                        </li>
+                        <li class="nav-item has-treeview ">
+                            <a href="#" class="nav-link "><img src="~/img/ico/users.png" width="25" height="25"><p> Admin Usuarios<i class="right fas fa-angle-left"></i></p></a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a asp-controller="Users" asp-action="Index" class="nav-link "><p>&emsp;Usuarios</p></a>
+                                    
+                                </li>
+                            </ul>
+                        </li>
+
+
+                        <li class="nav-item has-treeview ">
+                            <a href="#" class="nav-link "><img src="~/img/ico/recepcion.png" width="25" height="25"><p> Admin Eventos<i class="right fas fa-angle-left"></i></p></a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a asp-controller="Events" asp-action="Index" class="nav-link "><p>&emsp;Eventos</p></a>
+                                </li>
+                            </ul>
+                        </li>
+
+
+                        <li class="nav-item has-treeview ">
+                            <a href="#" class="nav-link "><img src="~/img/ico/inventario.png" width="25" height="25"><p> Admin Organizadores<i class="right fas fa-angle-left"></i></p></a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a asp-controller="Organizers" asp-action="Index" class="nav-link "><p>&emsp;Organizadores</p></a>
+                                </li>
+                            </u
+                        </li>
+
+
+                           <li class="nav-item has-treeview ">
+                            <a href="#" class="nav-link "><img src="~/img/ico/cotizacion.png" width="25" height="25"><p> Admin Factura<i class="right fas fa-angle-left"></i></p></a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a asp-controller="Invoices" asp-action="Index" class="nav-link "><p>&emsp;Facturas</p></a>
+                                </li>
+                            </ul>
+                        </li>
+
+
+                        <li class="nav-item  ">
+                            <a href="/docs/3.0/faq.html" class="nav-link "><img src="~/img/ico/help.png" width="25" height="25"><p> Ayuda</p></a>
+                        </li>
+
+
+                        <li class="nav-item  ">
+                            <a href="/docs/3.0/license.html" class="nav-link "><img src="~/img/ico/sos.png" width="25" height="25"><p> Soporte</p></a>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- /.sidebar-menu -->
+            </div>
+            <!-- /.sidebar -->
+        </aside>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
+            </div>
+            <!-- /.content-header -->
+            <!-- Main content -->
+            <div class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <!-- ACÁ VA EL CUERPO DE LA PÁGINA-->
+                        @RenderBody()
+
+                    </div>
+                    <!-- /.row -->
+                </div><!-- /.container-fluid -->
+
+
+
+
+            </div>
+            <!-- /.content -->
+        </div>
+        <footer class="main-footer">
+            <!-- To the right -->
+            <div class="float-right d-none d-sm-inline">
+                Proyecto de Farmacia
+            </div>
+            <!-- Default to the left -->
+            <strong>Copyright &copy; 2024 <a href="https://www.ulacit.ac.cr">Ulacit</a>.</strong> All rights reserved.
+        </footer>
+    </div>
+
+
+    <!-- jQuery -->
+    <script src="~/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/js/adminlte.min.js?v=3.2.0"></script>
+
+    <script src="~/js/datatables/datatables-1.13.8/jquery.datatables.js"></script>
+    <script src="~/js/datatables/buttons-2.4.2/buttons.print.js"></script>
+    <script src="~/js/datatables/pdfmake-0.2.7/pdfmake.js"></script>
+    <script src="~/js/datatables/pdfmake-0.2.7/vfs_fonts.js"></script>
+    <script src="~/js/datatables/buttons-2.4.2/buttons.html5.js"></script>
+    <script src="~/js/datatables/buttons-2.4.2/datatables.buttons.js"></script>
+    <script src="~/js/datatable/buttons.html5.min.js"></script>
+    <script src="~/js/Logica/jsUtilidades.js"></script>
+    <script src="~/plugins/daterangepicker/daterangepicker.js"></script>
+    <script src="~/plugins/select2/js/select2.full.min.js"></script>
+
+    <script src="~/js/alertifyjs/alertify.min.js"></script>
+    <script src="~/js/logica/jsmensaje.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.3.3/jquery.inputmask.bundle.min.js"></script>
+
+
+    @RenderSection("Scripts", required: false)
+
+
+</body>
+</html>
