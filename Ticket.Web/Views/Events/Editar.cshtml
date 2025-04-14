@@ -1,0 +1,38 @@
+﻿@using API.Models;
+@model Event
+
+<h1>Editar Evento</h1>
+
+<form asp-action="Editar" method="post">
+	<input asp-for="IdEvent" type="hidden" /> <!-- Campo oculto para el ID -->
+	<div>
+		<label>ID de Categoria</label>
+		<input asp-for="IdEventCategory" class="form-control" />
+	</div>
+	<div>
+		<label>ID de Organizador</label>
+		<input asp-for="IdOrganizer" class="form-control" />
+	</div>
+	<div>
+		<label>Descripcion</label>
+		<input asp-for="Description" class="form-control" />
+	</div>
+	<div>
+		<label>Fecha</label>
+		<input asp-for="Date" class="form-control" />
+	</div>
+	<div>
+		<label>Lugar</label>
+		<input asp-for="Location" class="form-control" />
+	</div>
+	<div>
+		<label>Capacidad</label>
+		<input asp-for="Capacity" class="form-control" />
+	</div>
+	<div>
+		<label>Precio</label>
+		<input asp-for="Price" class="form-control" />
+	</div>
+
+	<button type="submit" class="btn btn-primary">Actualizar</button>
+</form>

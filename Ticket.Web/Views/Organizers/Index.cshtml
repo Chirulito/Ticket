@@ -1,0 +1,81 @@
+﻿@using API.Models;
+@model List<Organizer>
+
+@{
+	Layout = "_Layout";
+}
+
+
+
+<div class="col-md-12">
+
+
+	<div class="card">
+		@*<div class="card-header">
+		<h6 class="card-title">Recepción de Documentos</h6>
+		</div>*@
+
+		<div class="card-body">
+
+			<div class="row">
+				<div class="col-sm-6">
+					<label>Organizadores</label>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="form-group">
+						<a button type="button" class="btn btn-sm" style="background-color:#001f3f;color:#ffffff" id="Btn" asp-area="" asp-controller="Organizers" asp-action="Crear">Crear Organizador</a>
+
+					</div>
+
+				</div>
+
+			</div> <!-- Div de Row-->
+
+			<hr style="size:1px">
+
+
+			<div class="row">
+
+				<table id="organizers" class="display dataTable" style="width:100%">
+					<thead>
+						<tr>
+							<th>IdOrganizer</th>
+							<th>Name</th>
+							<th>Email</th>
+							<th>Phone</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var org in Model)
+						{
+							<tr>
+								<td>@org.IdOrganizer</td>
+								<td>@org.Name</td>
+								<td>@org.Email</td>
+								<td>@org.Phone</td>
+								<td>
+									<a button type="button" class="btn btn-success" id="Btn" asp-area="" asp-controller="Organizers" asp-action="Editar" asp-route-id="@org.IdOrganizer">Editar Organizador</a>
+									<a button type="button" class="btn btn-danger" id="Btn" asp-area="" asp-controller="Organizers" asp-action="Eliminar" asp-route-id="@org.IdOrganizer">Eliminar Organizador</a>
+
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div> <!-- Div de Row-->
+			<hr style="size:1px">
+		</div>
+	</div>
+</div>
+
+
+
+
+@* }
+else
+{
+<p>No hay usuarios disponibles.</p>
+} *@

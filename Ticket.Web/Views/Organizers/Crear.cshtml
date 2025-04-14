@@ -1,0 +1,20 @@
+﻿@using API.Models;
+@model Organizer
+
+<h1>Insertar Organizador</h1>
+
+<form asp-action="Crear" method="post">
+	<div>
+		<label>Nombre</label>
+		<input asp-for="Name" class="form-control" />
+	</div>
+	<div>
+		<label>Email</label>
+		<input asp-for="Email" class="form-control" />
+	</div>
+	<div>
+		<label>Numero de Telefono</label>
+		<input asp-for="Phone" class="form-control" />
+	</div>
+	<button type="submit" class="btn btn-primary">Guardar</button>
+</form>

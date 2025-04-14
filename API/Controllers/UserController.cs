@@ -18,7 +18,8 @@ namespace API.Controllers
     {
         private readonly TicketContext _context;
 
-        public UserController(TicketContext context)
+
+		public UserController(TicketContext context)
         {
             _context = context;
         }
