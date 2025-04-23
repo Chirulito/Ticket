@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #223485, #313261);
+            font-family: sans-serif;
+        }
+
+        .container {
+            display: flex;
+            width: 800px;
+            height: auto;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .left {
+            flex: 1;
+            background: linear-gradient(135deg, #27696d, #46696b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .right {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .btn {
+            background: #46696b;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            width: 100%;
+        }
+
+            .btn:hover {
+                background: #375152;
+            }
+
+        .login-link {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+            .login-link a {
+                color: #46696b;
+                text-decoration: none;
+                font-weight: bold;
+            }
+
+                .login-link a:hover {
+                    text-decoration: underline;
+                }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left">
+            <h1>¡Crea tu cuenta en TickeXpress!</h1>
+        </div>
+        <div class="right">
+            <h2>Registro</h2>
+            <form id="formRegistro">
+                <input type="text" name="nombre" placeholder="Nombre" required />
+                <input type="text" name="apellido" placeholder="Apellido" required />
+                <input type="email" name="correo" placeholder="Correo electrónico" required />
+                <input type="password" name="contrasena" placeholder="Contraseña" required />
+
+                <select name="provincia" required>
+                    <option value="">Seleccione una Provincia...</option>
+                    <option value="Alajuela">ALAJUELA</option>
+                    <option value="Cartago">CARTAGO</option>
+                    <option value="Guanacaste">GUANACASTE</option>
+                    <option value="Heredia">HEREDIA</option>
+                    <option value="Limon">LIMÓN</option>
+                    <option value="Puntarenas">PUNTARENAS</option>
+                    <option value="San Jose">SAN JOSÉ</option>
+                </select>
+
+                <button type="submit" class="btn">Registrarse</button>
+            </form>
+            <div class="login-link">
+                ¿Ya tienes una cuenta? <a href="login.html">Inicia sesión</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.getElementById('formRegistro').addEventListener('submit', function(e) {
+      e.preventDefault();
+      // Simulación de registro exitoso
+      alert("¡Registro exitoso! Serás redirigido a la página principal.");
+      window.location.href = "PaginaPrin.html";
+    });
+    </script>
+</body>
+</html>

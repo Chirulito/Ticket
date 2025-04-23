@@ -16,8 +16,8 @@ namespace Farmacia.Web.Controllers
 
 		public IActionResult Index()
 		{
-			return View();
-		}
+            return Redirect("/Login.html");
+        }
 
 		public IActionResult Privacy()
 		{

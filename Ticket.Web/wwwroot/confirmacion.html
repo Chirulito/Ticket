@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmación de Compra</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #1d2671, #c33764);
+            color: white;
+            text-align: center;
+            padding: 50px;
+        }
+
+        .ticket {
+            background-color: rgba(0, 0, 0, 0.75);
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 600px;
+            margin: auto;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            color: #20c997;
+        }
+
+        .info {
+            margin-top: 20px;
+            font-size: 1.2em;
+            line-height: 1.8;
+        }
+
+        .qr {
+            margin-top: 30px;
+        }
+
+            .qr img {
+                width: 180px;
+                height: 180px;
+            }
+    </style>
+</head>
+<body>
+    <div class="ticket">
+        <h1>🎉 ¡Gracias por tu compra! 🎉</h1>
+        <div class="info">
+            <p><strong>Nombre:</strong> <span id="nombre"></span></p>
+            <p><strong>Correo:</strong> <span id="email"></span></p>
+            <p><strong>Evento:</strong> <span id="evento"></span></p>
+            <p><strong>Entradas:</strong> <span id="cantidad"></span></p>
+            <p><strong>Asientos:</strong> <span id="asientos"></span></p>
+        </div>
+        <div class="qr">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=TicketZone-QR123456" alt="QR de entrada">
+            <p style="margin-top: 10px; font-size: 0.9em; color: #ccc;">Este código es únicamente informativo.</p>
+        </div>
+    </div>
+
+    <script>// Obtener valores de localStorage
+    document.getElementById('nombre').textContent = localStorage.getItem('nombre') || 'N/A';
+    document.getElementById('email').textContent = localStorage.getItem('email') || 'N/A';
+    document.getElementById('evento').textContent = localStorage.getItem('evento') || 'N/A';
+    document.getElementById('cantidad').textContent = localStorage.getItem('cantidad') || 'N/A';
+    document.getElementById('asientos').textContent = localStorage.getItem('asiento') || 'N/A';</script>
+</body>
+</html>

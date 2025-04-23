@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <style>
+        /* Tus estilos se mantienen igual */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #223485, #313261);
+            font-family: sans-serif;
+        }
+
+        .container {
+            display: flex;
+            width: 800px;
+            height: 400px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .left {
+            flex: 1;
+            background: linear-gradient(135deg, #27696d, #46696b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .right {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .btn {
+            background: #46696b;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            width: 100%;
+        }
+
+            .btn:hover {
+                background: #375152;
+            }
+
+        .register-link {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+            .register-link a {
+                color: #46696b;
+                text-decoration: none;
+                font-weight: bold;
+            }
+
+                .register-link a:hover {
+                    text-decoration: underline;
+                }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left">
+            <h1>¡Bienvenido a TickeXpress!</h1>
+        </div>
+        <div class="right">
+            <h2>Login</h2>
+            <form id="loginForm">
+                <input type="text" id="username" placeholder="Usuario" required />
+                <input type="password" id="password" placeholder="Contraseña" required />
+                <button type="submit" class="btn">Ingresar</button>
+            </form>
+            <div class="register-link">
+                ¿No tienes una cuenta? <a href="registro.html">Regístrate aquí</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    const form = document.getElementById("loginForm");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      // Lógica de redirección
+      if (username === "admin" && password === "admin123") {
+        window.location.href = "Admin.html";
+      } else if (username === "usuario" && password === "user123") {
+        window.location.href = "PaginaPrin.html";
+      } else {
+        alert("Usuario o contraseña incorrectos.");
+      }
+    });
+    </script>
+</body>
+</html>

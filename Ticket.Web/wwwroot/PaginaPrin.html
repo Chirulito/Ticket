@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TicketZone</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to bottom right, #0d47a1, #42a5f5, #b3e5fc);
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            background-size: cover;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+
+        header {
+            background-image: url('img/con.1.png');
+            background-size: cover;
+            background-position: center;
+            padding: 5rem 2rem;
+            text-align: center;
+            color: white;
+            position: relative;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+            header::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 1;
+            }
+
+        .logo-container {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 3;
+        }
+
+            .logo-container img {
+                width: 120px;
+                height: auto;
+                border-radius: 10px;
+            }
+
+        .header-content {
+            z-index: 2;
+            position: relative;
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 2rem;
+            border-radius: 20px;
+            backdrop-filter: blur(6px);
+            max-width: 90%;
+            margin: auto;
+        }
+
+            .header-content h1 {
+                font-size: 2.8rem;
+                font-weight: bold;
+                color: #ffffff;
+                text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+            }
+
+            .header-content span {
+                color: #20c997;
+            }
+
+            .header-content p {
+                font-size: 1.3rem;
+                color: #f8f9fa;
+                margin-top: 1rem;
+                text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+            }
+
+        .section {
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+            .section h2 {
+                color: #ffffff;
+                margin-bottom: 1rem;
+            }
+
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+            .gallery img {
+                width: 250px;
+                height: 160px;
+                object-fit: cover;
+                border-radius: 15px;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+                transition: transform 0.4s ease;
+            }
+
+                .gallery img:hover {
+                    transform: scale(1.05);
+                }
+
+        .eventos {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .evento {
+            background-color: #1e1e1e;
+            border-radius: 15px;
+            padding: 1rem;
+            width: 280px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+            transition: transform 0.3s ease;
+        }
+
+            .evento:hover {
+                transform: translateY(-5px);
+            }
+
+            .evento img {
+                width: 100%;
+                height: 160px;
+                object-fit: cover;
+                border-radius: 10px;
+            }
+
+            .evento h3 {
+                color: #74ffe1;
+                margin-top: 0.5rem;
+            }
+
+            .evento .btn {
+                margin-top: 0.5rem;
+                padding: 0.6rem 1.2rem;
+                border: none;
+                border-radius: 10px;
+                background: linear-gradient(to right, #20c997, #17a2b8);
+                color: white;
+                font-size: 1rem;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                display: inline-block;
+                text-decoration: none;
+            }
+
+                .evento .btn:hover {
+                    transform: scale(1.05);
+                    background: linear-gradient(to right, #17a2b8, #20c997);
+                }
+
+        .testimonials {
+            max-width: 1000px;
+            margin: 4rem auto 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+            text-align: left;
+        }
+
+        .testimonial {
+            background-color: #1f1f1f;
+            padding: 1.5rem;
+            border-radius: 15px;
+            width: 280px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+            transition: transform 0.3s ease;
+        }
+
+            .testimonial:hover {
+                transform: translateY(-5px);
+            }
+
+            .testimonial p {
+                font-style: italic;
+                color: #ccc;
+            }
+
+        .experiencia {
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+            .experiencia p {
+                max-width: 800px;
+                margin: 0.5rem auto;
+                font-style: italic;
+                color: #e9e9e9;
+            }
+
+        footer {
+            background-color: #072668;
+            padding: 2rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #fcf9f9;
+            margin-top: 4rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <img src="img/log.png" alt="Logo TicketZone">
+        </div>
+        <div class="header-content">
+            <h1>🎟️ Bienvenido a <span>TicketXpress</span></h1>
+            <p>Explora, disfruta y vive la emoción de cada evento único en un solo lugar.</p>
+        </div>
+    </header>
+
+    <section class="section experiencia">
+        <h2>🎯 Próximos Eventos y Experiencia TickeXpress 🎯</h2>
+        <p>Desde conciertos épicos hasta puestas en escena inolvidables, TickeXpress es tu mejor opción para vivir cada evento al máximo.</p>
+        <p><em>Próximamente: Festival Orgullo 2025, Broadway Night Costa Rica 🎟️</em></p>
+    </section>
+
+    <section class="section">
+        <h2>¡Más de 10 años llevando emoción a tu vida!</h2>
+        <p>Nos enorgullece ser líderes en la venta de tiquetes para los eventos más importantes del país.</p>
+    </section>
+
+    <section class="section">
+        <h2>Galería de Nuestros Eventos</h2>
+        <div class="gallery">
+            <img src="img/con.1.png" alt="Concierto">
+            <img src="img/fes.png" alt="Festival">
+            <img src="img/tea.png" alt="Teatro">
+            <img src="img/con.2.png" alt="Evento Especial">
+        </div>
+    </section>
+
+    <section class="section" id="conciertos">
+        <h2>Conciertos</h2>
+        <div class="eventos">
+            <div class="evento">
+                <img src="img/play.png" alt="Coldplay">
+                <h3>Coldplay en Costa Rica</h3>
+                <a href="compra.html?evento=Coldplay en Costa Rica" class="btn">Comprar</a>
+            </div>
+            <div class="evento">
+                <img src="img/maluna.png" alt="Rock Fest">
+                <h3>Rock Fest 2025</h3>
+                <a href="compra.html?evento=Rock Fest 2025" class="btn">Comprar</a>
+            </div>
+            <div class="evento">
+                <img src="img/con.3.png" alt="Bad Bunny">
+                <h3>Bad Bunny World Tour</h3>
+                <a href="compra.html?evento=Bad Bunny World Tour" class="btn">Comprar</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="teatro">
+        <h2>Teatro</h2>
+        <div class="eventos">
+            <div class="evento">
+                <img src="img/teatro.1.png" alt="Romeo y Julieta">
+                <h3>Romeo y Julieta</h3>
+                <a href="compra.html?evento=Romeo y Julieta" class="btn">Comprar</a>
+            </div>
+            <div class="evento">
+                <img src="img/teatro.2.png" alt="Bernarda Alba">
+                <h3>La Casa de Bernarda Alba</h3>
+                <a href="compra.html?evento=La Casa de Bernarda Alba" class="btn">Comprar</a>
+            </div>
+            <div class="evento">
+                <img src="img/teatro.3.png" alt="Impro">
+                <h3>Noche de Improvisación</h3>
+                <a href="compra.html?evento=Noche de Improvisación" class="btn">Comprar</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="festivales">
+        <h2>Festivales</h2>
+        <div class="eventos">
+            <div class="evento">
+                <img src="img/festival.1.png" alt="Gastronomía">
+                <h3>Festival Gastronómico</h3>
+                <a href="compra.html?evento=Festival Gastronómico" class="btn">Comprar</a>
+            </div>
+            <div class="evento">
+                <img src="img/festival.2.png" alt="Verano">
+                <h3>Festival de Verano</h3>
+                <a href="compra.html?evento=Festival de Verano" class="btn">Comprar</a>
+            </div>
+            <div class="evento">
+                <img src="img/festival.3.png" alt="Colores">
+                <h3>Festival de los Colores</h3>
+                <a href="compra.html?evento=Festival de los Colores" class="btn">Comprar</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>💬 Testimonios de nuestros clientes 💬</h2>
+        <div class="testimonials">
+            <div class="testimonial">
+                <p>“Compré mis entradas para el concierto de Bad Bunny y todo fue súper fácil y seguro. ¡Excelente servicio!”</p>
+                <strong>- María C.</strong>
+            </div>
+            <div class="testimonial">
+                <p>“TickeXpress siempre tiene los mejores eventos, nunca me pierdo uno. ¡Los recomiendo al 100%!”</p>
+                <strong>- Andrés V.</strong>
+            </div>
+            <div class="testimonial">
+                <p>“¡Un servicio confiable y rápido!”</p>
+                <strong>- Laura T.</strong>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        2025 TickeXpress. Todos los derechos reservados. | Contacto: info@TickeXpress.com
+        <p>Instagram: TickeXpress | Facebook: TickeXpress</p>
+        <p>Call center: 8888-8888</p>
+    </footer>
+
+</body>
+</html>

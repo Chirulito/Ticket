@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Organizador - TicketZone</title>
+    <style>
+        :root {
+            --fondo: #1362bb;
+            --verde-agua: #20c997;
+            --celeste: #17a2b8;
+            --blanco: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--fondo);
+            color: var(--blanco);
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: var(--verde-agua);
+        }
+
+        .form-container {
+            background-color: #1e1e1e;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 500px;
+            margin: auto;
+            box-shadow: 0 0 15px rgba(32, 201, 151, 0.15);
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: var(--celeste);
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: none;
+            background-color: #2c2c2c;
+            color: var(--blanco);
+            margin-bottom: 15px;
+        }
+
+            input:focus {
+                outline: none;
+                box-shadow: 0 0 5px var(--verde-agua);
+            }
+
+        .btn {
+            background: linear-gradient(to right, var(--verde-agua), var(--celeste));
+            color: white;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+            .btn:hover {
+                transform: scale(1.05);
+            }
+
+        .volver {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: var(--celeste);
+        }
+
+            .volver:hover {
+                text-decoration: underline;
+            }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h1>Crear Nuevo Organizador</h1>
+        <form id="formOrganizador">
+            <label for="nombre">Nombre del Organizador:</label>
+            <input type="text" id="nombre" required>
+
+            <label for="email">Correo Electrónico:</label>
+            <input type="email" id="email" required>
+
+            <label for="telefono">Teléfono:</label>
+            <input type="tel" id="telefono" required>
+
+            <button type="submit" class="btn">Guardar Organizador</button>
+        </form>
+
+        <a href="admin.html" class="volver">← Volver al Panel Admin</a>
+    </div>
+
+    <script>
+        const nombre = document.getElementById("nombre");
+        const email = document.getElementById("email");
+        const telefono = document.getElementById("telefono");
+        const form = document.getElementById("formOrganizador");
+
+        const organizadores = JSON.parse(localStorage.getItem("organizadores")) || [];
+        const indexEditar = localStorage.getItem("organizadorEditar");
+
+        if (indexEditar !== null) {
+            const org = organizadores[indexEditar];
+            if (org) {
+                nombre.value = org.nombre;
+                email.value = org.email;
+                telefono.value = org.telefono;
+            }
+        }
+
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            const nuevoOrg = {
+                nombre: nombre.value.trim(),
+                email: email.value.trim(),
+                telefono: telefono.value.trim()
+            };
+
+            if (indexEditar !== null) {
+                organizadores[indexEditar] = nuevoOrg;
+                localStorage.removeItem("organizadorEditar");
+            } else {
+                organizadores.push(nuevoOrg);
+            }
+
+            localStorage.setItem("organizadores", JSON.stringify(organizadores));
+            window.location.href = "admin.html";
+        });
+    </script>
+
+</body>
+</html>

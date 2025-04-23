@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Admin - TicketZone</title>
+    <style>
+        :root {
+            --fondo: #1362bb;
+            --verde-agua: #20c997;
+            --celeste: #17a2b8;
+            --blanco: #f8f9fa;
+            --gris: #343a40;
+            --borde: #444;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--fondo);
+            margin: 0;
+            padding: 20px;
+            color: var(--blanco);
+        }
+
+        h2, h3 {
+            color: var(--verde-agua);
+        }
+
+        .panel {
+            background-color: #1e1e1e;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 0 12px rgba(32, 201, 151, 0.1);
+            margin-bottom: 30px;
+            transition: transform 0.3s ease;
+        }
+
+            .panel:hover {
+                transform: translateY(-3px);
+            }
+
+        button, .btn-home {
+            background: linear-gradient(to right, var(--verde-agua), var(--celeste));
+            color: white;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: background 0.3s ease, transform 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+            button:hover, .btn-home:hover {
+                background: linear-gradient(to right, var(--celeste), var(--verde-agua));
+                transform: scale(1.05);
+            }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--borde);
+        }
+
+        th {
+            background-color: #111213;
+            color: var(--celeste);
+        }
+
+        td {
+            color: var(--blanco);
+        }
+
+        .acciones .btn-home {
+            margin-right: 10px;
+            margin-bottom: 0;
+            padding: 6px 14px;
+            font-size: 13px;
+        }
+
+        .volver-home {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .menu-dropdown {
+            display: none;
+            position: absolute;
+            background-color: white;
+            color: black;
+            min-width: 160px;
+            border-radius: 6px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
+
+            .menu-dropdown a {
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+                border-bottom: 1px solid #ccc;
+            }
+
+                .menu-dropdown a:hover {
+                    background-color: #eee;
+                }
+
+        /* Responsive */
+        @media screen and (max-width: 768px) {
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+
+            th {
+                position: absolute;
+                left: -9999px;
+                top: -9999px;
+            }
+
+            td {
+                position: relative;
+                padding-left: 50%;
+                border-bottom: 1px solid #444;
+            }
+
+                td::before {
+                    position: absolute;
+                    top: 12px;
+                    left: 15px;
+                    width: 45%;
+                    padding-right: 10px;
+                    white-space: nowrap;
+                    color: var(--celeste);
+                    font-weight: bold;
+                    content: attr(data-label);
+                }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="volver-home">
+        <button onclick="toggleMenu()" class="btn-home">Volver al Home</button>
+        <div id="menuOpciones" class="menu-dropdown">
+            <a href="PaginaPrin.html">Ir al Inicio</a>
+            <a href="login.html">Cerrar Sesión</a>
+        </div>
+    </div>
+
+    <!-- EVENTOS -->
+    <div class="panel">
+        <h3>Eventos</h3>
+        <a href="crear-evento.html" class="btn-home">Crear Evento</a>
+        <table id="tablaEventos">
+            <thead>
+                <tr>
+                    <th>Eventos</th>
+                    <th>Categoría</th>
+                    <th>Organizador</th>
+                    <th>Descripción</th>
+                    <th>Fecha</th>
+                    <th>Ubicación</th>
+                    <th>Capacidad</th>
+                    <th>Precio</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <!-- ORGANIZADORES -->
+    <div class="panel">
+        <h3>Organizadores</h3>
+        <a href="crear-organizador.html" class="btn-home">Crear Organizador</a>
+        <table id="tablaOrganizadores">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Teléfono</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById("menuOpciones");
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+            document.addEventListener("click", function (e) {
+                if (!e.target.closest(".volver-home")) {
+                    menu.style.display = "none";
+                }
+            }, { once: true });
+        }
+
+        window.addEventListener("DOMContentLoaded", () => {
+            const eventos = JSON.parse(localStorage.getItem("eventos")) || [];
+            const organizadores = JSON.parse(localStorage.getItem("organizadores")) || [];
+
+            const tbodyEventos = document.querySelector("#tablaEventos tbody");
+            const tbodyOrgs = document.querySelector("#tablaOrganizadores tbody");
+
+            function renderEventos() {
+                tbodyEventos.innerHTML = "";
+                eventos.forEach((ev, index) => {
+                    const fila = document.createElement("tr");
+                    fila.innerHTML = `
+                <td data-label="Eventos">${ev.nombre}</td>
+                <td data-label="Categoría">${ev.categoria}</td>
+                <td data-label="Organizador">${ev.organizador}</td>
+                <td data-label="Descripción">${ev.descripcion}</td>
+                <td data-label="Fecha">${ev.fecha}</td>
+                <td data-label="Ubicación">${ev.ubicacion}</td>
+                <td data-label="Capacidad">${ev.capacidad}</td>
+                <td data-label="Precio">$${ev.precio}</td>
+                <td data-label="Acciones">
+                  <div class="acciones" style="display: none;">
+                    <button class="btn-home btn-editar" data-index="${index}">Editar</button>
+                    <button class="btn-home btn-eliminar" data-index="${index}">Eliminar</button>
+                  </div>
+                </td>`;
+                    fila.addEventListener("mouseenter", () => fila.querySelector(".acciones").style.display = "inline-block");
+                    fila.addEventListener("mouseleave", () => fila.querySelector(".acciones").style.display = "none");
+                    tbodyEventos.appendChild(fila);
+                });
+
+                document.querySelectorAll(".btn-eliminar").forEach(btn => {
+                    btn.addEventListener("click", () => {
+                        const index = btn.getAttribute("data-index");
+                        eventos.splice(index, 1);
+                        localStorage.setItem("eventos", JSON.stringify(eventos));
+                        renderEventos();
+                    });
+                });
+
+                document.querySelectorAll(".btn-editar").forEach(btn => {
+                    btn.addEventListener("click", () => {
+                        const index = btn.getAttribute("data-index");
+                        localStorage.setItem("eventoEditar", index);
+                        window.location.href = "crear-evento.html";
+                    });
+                });
+            }
+
+            function renderOrganizadores() {
+                tbodyOrgs.innerHTML = "";
+                organizadores.forEach((org, index) => {
+                    const fila = document.createElement("tr");
+                    fila.innerHTML = `
+                <td data-label="Nombre">${org.nombre}</td>
+                <td data-label="Email">${org.email}</td>
+                <td data-label="Teléfono">${org.telefono}</td>
+                <td data-label="Acciones">
+                  <div class="acciones" style="display: none;">
+                    <button class="btn-home btn-editar-org" data-index="${index}">Editar</button>
+                    <button class="btn-home btn-eliminar-org" data-index="${index}">Eliminar</button>
+                  </div>
+                </td>`;
+                    fila.addEventListener("mouseenter", () => fila.querySelector(".acciones").style.display = "inline-block");
+                    fila.addEventListener("mouseleave", () => fila.querySelector(".acciones").style.display = "none");
+                    tbodyOrgs.appendChild(fila);
+                });
+
+                document.querySelectorAll(".btn-eliminar-org").forEach(btn => {
+                    btn.addEventListener("click", () => {
+                        const index = btn.getAttribute("data-index");
+                        if (confirm("¿Eliminar este organizador?")) {
+                            organizadores.splice(index, 1);
+                            localStorage.setItem("organizadores", JSON.stringify(organizadores));
+                            renderOrganizadores();
+                        }
+                    });
+                });
+
+                document.querySelectorAll(".btn-editar-org").forEach(btn => {
+                    btn.addEventListener("click", () => {
+                        const index = btn.getAttribute("data-index");
+                        localStorage.setItem("organizadorEditar", index);
+                        window.location.href = "crear-organizador.html";
+                    });
+                });
+            }
+
+            renderEventos();
+            renderOrganizadores();
+        });
+    </script>
+</body>
+</html>
