@@ -33,7 +33,7 @@ try
 {   // add database-services
 
     builder.Services.AddDbContext<TicketContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DESKTOP-F51BFTS")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("OFFICE")));
 
     Console.WriteLine("\nDatabase connection established!\n");
 }
