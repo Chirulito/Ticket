@@ -1,186 +1,80 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Text;
-using API.Models;
-using Newtonsoft.Json;
+using Microsoft.EntityFrameworkCore;
+using Ticket.Web.Models;
 
 namespace Ticket.Web.Controllers
 {
-    public class OrganizersController : Controller
-
+    [Route("api/[controller]")]
+    [ApiController]
+    public class OrganizersController : ControllerBase
     {
+        private readonly ApplicationDbContext _context;
 
-        private readonly string apiUrl = "http://localhost:5280/api/Organizer";
-
-        public async Task<IActionResult> Index()
-
+        public OrganizersController(ApplicationDbContext context)
         {
+            _context = context;
+        }
 
-            using (var httpClient = new HttpClient())
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Organizer>>> GetOrganizers()
+        {
+            return await _context.Organizers.ToListAsync();
+        }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Organizer>> GetOrganizer(int id)
+        {
+            var organizer = await _context.Organizers.FindAsync(id);
+
+            if (organizer == null)
+                return NotFound();
+
+            return organizer;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Organizer>> PostOrganizer(Organizer organizer)
+        {
+            _context.Organizers.Add(organizer);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetOrganizer), new { id = organizer.IdOrganizer }, organizer);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutOrganizer(int id, Organizer organizer)
+        {
+            if (id != organizer.IdOrganizer)
+                return BadRequest();
+
+            _context.Entry(organizer).State = EntityState.Modified;
+
+            try
             {
-
-                // Llamada a la API
-
-                var response = await httpClient.GetAsync("http://localhost:5280/api/Organizer");
-
-                if (response.IsSuccessStatusCode)
-
-                {
-
-                    // Obtener el contenido JSON de la respuesta
-
-                    var jsonResponse = await response.Content.ReadAsStringAsync();
-
-                    // Deserializar el JSON en una lista de Organizer
-
-                    var organizers = JsonConvert.DeserializeObject<List<Organizer>>(jsonResponse);
-
-                    // Validar que el modelo nunca sea nulo
-
-                    if (organizers == null)
-
-                    {
-
-                        organizers = new List<Organizer>();
-
-                    }
-
-                    return View(organizers); // Enviar datos a la vista
-
-                }
-
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.Organizers.Any(e => e.IdOrganizer == id))
+                    return NotFound();
                 else
-
-                {
-
-                    // Manejo de error si la API no responde correctamente
-
-                    return View(new List<Organizer>()); // Lista vacía en caso de error
-
-                }
-
+                    throw;
             }
 
+            return NoContent();
         }
 
-        public IActionResult Crear()
-
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteOrganizer(int id)
         {
+            var organizer = await _context.Organizers.FindAsync(id);
+            if (organizer == null)
+                return NotFound();
 
-            return View();
+            _context.Organizers.Remove(organizer);
+            await _context.SaveChangesAsync();
 
+            return NoContent();
         }
-
-        [HttpPost]
-
-        public async Task<IActionResult> Crear(Organizer organizer)
-
-        {
-
-            using (var httpClient = new HttpClient())
-
-            {
-
-                var content = new StringContent(JsonConvert.SerializeObject(organizer), Encoding.UTF8, "application/json");
-
-                var response = await httpClient.PostAsync(apiUrl, content);
-
-                if (response.IsSuccessStatusCode)
-
-                {
-
-                    return RedirectToAction("Index");
-
-                }
-
-                return View(organizer); // Retorna a la vista si algo falla
-
-            }
-
-        }
-
-        public async Task<IActionResult> Editar(int id)
-
-        {
-
-            using (var httpClient = new HttpClient())
-
-            {
-
-                var response = await httpClient.GetAsync($"{apiUrl}/{id}");
-
-                if (response.IsSuccessStatusCode)
-
-                {
-
-                    var jsonResponse = await response.Content.ReadAsStringAsync();
-
-                    var organizer = JsonConvert.DeserializeObject<Organizer>(jsonResponse);
-
-                    return View(organizer);
-
-                }
-
-                return RedirectToAction("Index"); // Redirige si algo falla
-
-            }
-
-        }
-
-        [HttpPost]
-
-        public async Task<IActionResult> Editar(Organizer organizer)
-
-        {
-
-            using (var httpClient = new HttpClient())
-
-            {
-
-                var content = new StringContent(JsonConvert.SerializeObject(organizer), Encoding.UTF8, "application/json");
-
-                var response = await httpClient.PutAsync($"{apiUrl}/{organizer.IdOrganizer}", content);
-
-                if (response.IsSuccessStatusCode)
-
-                {
-
-                    return RedirectToAction("Index");
-
-                }
-
-                return View(organizer); // Retorna a la vista si algo falla
-
-            }
-
-        }
-
-        public async Task<IActionResult> Eliminar(int id)
-
-        {
-
-            using (var httpClient = new HttpClient())
-
-            {
-
-                var response = await httpClient.DeleteAsync($"{apiUrl}/{id}");
-
-                if (response.IsSuccessStatusCode)
-
-                {
-
-                    return RedirectToAction("Index");
-
-                }
-
-                return RedirectToAction("Index"); // Redirige si algo falla
-
-            }
-
-        }
-
-
-
     }
-
 }

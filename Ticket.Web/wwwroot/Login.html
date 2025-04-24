@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login</title>
     <style>
-        /* Tus estilos se mantienen igual */
         body {
             display: flex;
             justify-content: center;
@@ -99,7 +98,7 @@
         <div class="right">
             <h2>Login</h2>
             <form id="loginForm">
-                <input type="text" id="username" placeholder="Usuario" required />
+                <input type="text" id="username" placeholder="Correo electrónico o admin" required />
                 <input type="password" id="password" placeholder="Contraseña" required />
                 <button type="submit" class="btn">Ingresar</button>
             </form>
@@ -110,23 +109,36 @@
     </div>
 
     <script>
-    const form = document.getElementById("loginForm");
+        const form = document.getElementById("loginForm");
 
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
+        form.addEventListener("submit", async function (e) {
+            e.preventDefault();
 
-      const username = document.getElementById("username").value.trim();
-      const password = document.getElementById("password").value.trim();
+            const email = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value.trim();
 
-      // Lógica de redirección
-      if (username === "admin" && password === "admin123") {
-        window.location.href = "Admin.html";
-      } else if (username === "usuario" && password === "user123") {
-        window.location.href = "PaginaPrin.html";
-      } else {
-        alert("Usuario o contraseña incorrectos.");
-      }
-    });
+            // Login como administrador fijo
+            if (email === "admin" && password === "admin123") {
+                window.location.href = "Admin.html";
+                return;
+            }
+
+            // Login como usuario normal
+            try {
+                const res = await fetch('http://localhost:5280/api/Users');
+                const users = await res.json();
+                const user = users.find(u => u.email === email && u.password === password);
+
+                if (user) {
+                    window.location.href = "PaginaPrin.html";
+                } else {
+                    alert("Credenciales incorrectas.");
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Error al conectar con el servidor.");
+            }
+        });
     </script>
 </body>
 </html>

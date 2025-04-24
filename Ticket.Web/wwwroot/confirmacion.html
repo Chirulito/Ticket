@@ -57,11 +57,14 @@
         </div>
     </div>
 
-    <script>// Obtener valores de localStorage
-    document.getElementById('nombre').textContent = localStorage.getItem('nombre') || 'N/A';
-    document.getElementById('email').textContent = localStorage.getItem('email') || 'N/A';
-    document.getElementById('evento').textContent = localStorage.getItem('evento') || 'N/A';
-    document.getElementById('cantidad').textContent = localStorage.getItem('cantidad') || 'N/A';
-    document.getElementById('asientos').textContent = localStorage.getItem('asiento') || 'N/A';</script>
+    <script>
+        const compra = JSON.parse(localStorage.getItem("ultimaCompra")) || {};
+
+        document.getElementById('nombre').textContent = compra.fullName || 'N/A';
+        document.getElementById('email').textContent = compra.email || 'N/A';
+        document.getElementById('evento').textContent = compra.eventName || 'N/A';
+        document.getElementById('cantidad').textContent = compra.quantity || 'N/A';
+        document.getElementById('asientos').textContent = compra.seat || 'N/A';
+    </script>
 </body>
 </html>

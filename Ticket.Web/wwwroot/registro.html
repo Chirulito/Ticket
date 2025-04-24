@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Registro</title>
     <style>
         body {
@@ -17,7 +17,6 @@
         .container {
             display: flex;
             width: 800px;
-            height: auto;
             background: #fff;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
@@ -103,7 +102,6 @@
                 <input type="text" name="apellido" placeholder="Apellido" required />
                 <input type="email" name="correo" placeholder="Correo electrónico" required />
                 <input type="password" name="contrasena" placeholder="Contraseña" required />
-
                 <select name="provincia" required>
                     <option value="">Seleccione una Provincia...</option>
                     <option value="Alajuela">ALAJUELA</option>
@@ -114,22 +112,57 @@
                     <option value="Puntarenas">PUNTARENAS</option>
                     <option value="San Jose">SAN JOSÉ</option>
                 </select>
-
                 <button type="submit" class="btn">Registrarse</button>
             </form>
             <div class="login-link">
-                ¿Ya tienes una cuenta? <a href="login.html">Inicia sesión</a>
+                ¿Ya tienes una cuenta? <a href="Login.html">Inicia sesión</a>
             </div>
         </div>
     </div>
 
     <script>
-    document.getElementById('formRegistro').addEventListener('submit', function(e) {
-      e.preventDefault();
-      // Simulación de registro exitoso
-      alert("¡Registro exitoso! Serás redirigido a la página principal.");
-      window.location.href = "PaginaPrin.html";
-    });
+        document.getElementById('formRegistro').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const nombre = document.querySelector('[name="nombre"]').value;
+            const apellido = document.querySelector('[name="apellido"]').value;
+            const email = document.querySelector('[name="correo"]').value;
+            const password = document.querySelector('[name="contrasena"]').value;
+            const province = document.querySelector('[name="provincia"]').value;
+
+            const data = {
+                name: nombre + " " + apellido,
+                email,
+                password,
+                province
+            };
+
+            try {
+                const res = await fetch("http://localhost:5280/api/Users", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (res.status === 409) {
+                    alert("Ese correo ya está registrado. Intenta con otro.");
+                    return;
+                }
+
+                if (res.ok) {
+                    alert("¡Registro exitoso!");
+                    window.location.href = "Login.html";
+                } else {
+                    alert("Error al registrar.");
+                }
+            } catch (error) {
+                alert("Error de conexión.");
+                console.error(error);
+            }
+        });
     </script>
+
 </body>
 </html>

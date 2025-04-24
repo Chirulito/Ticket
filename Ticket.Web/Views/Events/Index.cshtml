@@ -1,89 +1,33 @@
-﻿@using API.Models;
-@model List<Event>
-
-@{
-	Layout = "_Layout";
-}
+﻿@using Ticket.Web.Models
+@model IEnumerable<Ticket.Web.Models.Event>
 
 
+<h1>Lista de Eventos</h1>
 
-<div class="col-md-12">
-
-
-	<div class="card">
-		@*<div class="card-header">
-		<h6 class="card-title">Recepción de Documentos</h6>
-		</div>*@
-
-		<div class="card-body">
-
-			<div class="row">
-				<div class="col-sm-6">
-					<label>Eventos</label>
-				</div>
-			</div>
-
-			<div class="row">
-				<div class="col-sm-12">
-					<div class="form-group">
-						<a button type="button" class="btn btn-sm" style="background-color:#001f3f;color:#ffffff" id="Btn" asp-area="" asp-controller="Events" asp-action="Crear">Crear Eventos</a>
-
-					</div>
-
-				</div>
-
-			</div> <!-- Div de Row-->
-
-			<hr style="size:1px">
-
-
-			<div class="row">
-
-				<table id="event" class="display dataTable" style="width:100%">
-					<thead>
-						<tr>
-							<th>IdEvent</th>
-							<th>IdEventCategory</th>
-							<th>IdOrganizer</th>
-							<th>Description</th>
-							<th>Date</th>
-							<th>Location</th>
-							<th>Capacity</th>
-							<th>Price</th>
-						</tr>
-					</thead>
-					<tbody>
-						@foreach (var eve in Model)
-						{
-							<tr>
-								<td>@eve.IdEvent</td>
-								<td>@eve.IdEventCategory</td>
-								<td>@eve.IdOrganizer</td>
-								<td>@eve.Description</td>
-								<td>@eve.Date</td>
-								<td>@eve.Location</td>
-								<td>@eve.Capacity</td>
-								<td>@eve.Price</td>
-								<td>
-									<a button type="button" class="btn btn-success" id="Btn" asp-area="" asp-controller="Events" asp-action="Editar" asp-route-id="@eve.IdEvent">Editar Usuarios</a>
-									<a button type="button" class="btn btn-danger" id="Btn" asp-area="" asp-controller="Events" asp-action="Eliminar" asp-route-id="@eve.IdEvent">Eliminar Usuarios</a>
-
-								</td>
-							</tr>
-						}
-					</tbody>
-				</table>
-			</div> <!-- Div de Row-->
-			<hr style="size:1px">
-		</div>
-	</div>
-</div>
-
-
-
-
-@* }
-else
-{
-<p>No hay eventos disponibles.</p>
-} *@
+<table class="table">
+    <thead>
+        <tr>
+            <th>Categoría</th>
+            <th>Organizador</th>
+            <th>Descripción</th>
+            <th>Fecha</th>
+            <th>Ubicación</th>
+            <th>Capacidad</th>
+            <th>Precio</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.IdEventCategory</td>
+                <td>@item.IdOrganizer</td>
+                <td>@item.Description</td>
+                <td>@item.Date.ToShortDateString()</td>
+                <td>@item.Location</td>
+                <td>@item.Capacity</td>
+                <td>@item.Price</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -122,13 +122,13 @@
 
         <form id="formCompra">
             <label for="nombre">Nombre completo:</label>
-            <input type="text" id="nombre" name="nombre" required>
+            <input type="text" id="nombre" required>
 
             <label for="email">Correo electrónico:</label>
-            <input type="email" id="email" name="email" required>
+            <input type="email" id="email" required>
 
             <label for="evento" id="eventoLabel">Selecciona un evento:</label>
-            <select id="evento" name="evento" required>
+            <select id="evento" required>
                 <option value="">-- Selecciona --</option>
                 <option value="Coldplay en Costa Rica">Coldplay en Costa Rica</option>
                 <option value="Rock Fest 2025">Rock Fest 2025</option>
@@ -142,10 +142,10 @@
             </select>
 
             <label for="cantidad">Cantidad de entradas:</label>
-            <input type="number" id="cantidad" name="cantidad" min="1" max="10" required>
+            <input type="number" id="cantidad" min="1" max="10" required>
 
             <label for="asiento">Selecciona tus asientos:</label>
-            <select id="asiento" name="asiento" required>
+            <select id="asiento" required>
                 <option value="">-- Selecciona --</option>
                 <option value="Primer piso central">Primer piso central</option>
                 <option value="Primer piso derecha">Primer piso derecha</option>
@@ -161,7 +161,7 @@
             </div>
 
             <label for="pago">Método de pago:</label>
-            <select id="pago" name="pago" required>
+            <select id="pago" required>
                 <option value="">-- Selecciona --</option>
                 <option value="Tarjeta de crédito">Tarjeta de crédito</option>
                 <option value="PayPal">PayPal</option>
@@ -192,18 +192,45 @@
             eventoSelect.disabled = true;
         }
 
-        document.getElementById("formCompra").addEventListener("submit", function (e) {
+        document.getElementById("formCompra").addEventListener("submit", async function (e) {
             e.preventDefault();
 
-            const nombre = document.getElementById("nombre").value;
-            const email = document.getElementById("email").value;
+            const nombre = document.getElementById("nombre").value.trim();
+            const email = document.getElementById("email").value.trim();
             const evento = document.getElementById("evento").value;
-            const cantidad = document.getElementById("cantidad").value;
+            const cantidad = parseInt(document.getElementById("cantidad").value);
             const asiento = document.getElementById("asiento").value;
             const pago = document.getElementById("pago").value;
 
-            const url = `confirmacion.html?nombre=${encodeURIComponent(nombre)}&email=${encodeURIComponent(email)}&evento=${encodeURIComponent(evento)}&cantidad=${cantidad}&asiento=${encodeURIComponent(asiento)}&pago=${encodeURIComponent(pago)}`;
-            window.location.href = url;
+            const nuevaCompra = {
+                fullName: nombre,
+                email: email,
+                eventName: evento,
+                quantity: cantidad,
+                seat: asiento,
+                paymentMethod: pago,
+                purchaseDate: new Date().toISOString()
+            };
+
+            try {
+                const res = await fetch("http://localhost:5280/api/Invoices", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(nuevaCompra)
+                });
+
+                if (res.ok) {
+                    localStorage.setItem("ultimaCompra", JSON.stringify(nuevaCompra));
+                    window.location.href = "confirmacion.html";
+                } else {
+                    const error = await res.text();
+                    console.error("Error al guardar:", error);
+                    alert("❌ Error al registrar la compra.");
+                }
+            } catch (err) {
+                console.error("Fallo conexión con API:", err);
+                alert("❌ No se pudo conectar con el servidor.");
+            }
         });
     </script>
 </body>

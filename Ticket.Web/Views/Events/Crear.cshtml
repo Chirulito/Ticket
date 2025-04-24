@@ -1,27 +1,27 @@
-﻿@using API.Models;
-@model Event
+﻿@using Ticket.Web.Models
+@model Ticket.Web.Models.Event
 
 <h1>Insertar Evento</h1>
 
 <form asp-action="Crear" method="post">
 	<div>
-		<label>ID de Categoria</label>
+		<label>Categoría del Evento</label>
 		<input asp-for="IdEventCategory" class="form-control" />
 	</div>
 	<div>
-		<label>ID de Organizador</label>
+		<label>Organizador</label>
 		<input asp-for="IdOrganizer" class="form-control" />
 	</div>
 	<div>
-		<label>Descripcion</label>
+		<label>Descripción</label>
 		<input asp-for="Description" class="form-control" />
 	</div>
 	<div>
 		<label>Fecha</label>
-		<input asp-for="Date" class="form-control" />
+		<input asp-for="Date" type="date" class="form-control" />
 	</div>
 	<div>
-		<label>Lugar</label>
+		<label>Ubicación</label>
 		<input asp-for="Location" class="form-control" />
 	</div>
 	<div>

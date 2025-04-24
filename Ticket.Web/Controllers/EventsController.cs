@@ -1,186 +1,80 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Text;
-using API.Models;
-using Newtonsoft.Json;
+using Microsoft.EntityFrameworkCore;
+using Ticket.Web.Models;
 
 namespace Ticket.Web.Controllers
 {
-	public class EventsController : Controller
-
-	{
-
-		private readonly string apiUrl = "http://localhost:5280/api/Events";
-
-		public async Task<IActionResult> Index()
-
-		{
-
-			using (var httpClient = new HttpClient())
-
-			{
-
-				// Llamada a la API
-
-				var response = await httpClient.GetAsync("http://localhost:5280/api/Events");
-
-				if (response.IsSuccessStatusCode)
-
-				{
-
-					// Obtener el contenido JSON de la respuesta
-
-					var jsonResponse = await response.Content.ReadAsStringAsync();
-
-					// Deserializar el JSON en una lista de Events
-
-					var events = JsonConvert.DeserializeObject<List<Event>>(jsonResponse);
-
-					// Validar que el modelo nunca sea nulo
-
-					if (events == null)
-
-					{
-
-						events = new List<Event>();
-
-					}
-
-					return View(events); // Enviar datos a la vista
-
-				}
-
-				else
-
-				{
-
-					// Manejo de error si la API no responde correctamente
-
-					return View(new List<Event>()); // Lista vacía en caso de error
-
-				}
-
-			}
-
-		}
-
-		public IActionResult Crear()
-
-		{
-
-			return View();
-
-		}
-
-		[HttpPost]
-
-		public async Task<IActionResult> Crear(Event events)
-
-		{
-
-			using (var httpClient = new HttpClient())
-
-			{
-
-				var content = new StringContent(JsonConvert.SerializeObject(events), Encoding.UTF8, "application/json");
-
-				var response = await httpClient.PostAsync(apiUrl, content);
-
-				if (response.IsSuccessStatusCode)
-
-				{
-
-					return RedirectToAction("Index");
-
-				}
-
-				return View(events); // Retorna a la vista si algo falla
-
-			}
-
-		}
-
-		public async Task<IActionResult> Editar(int id)
-
-		{
-
-			using (var httpClient = new HttpClient())
-
-			{
-
-				var response = await httpClient.GetAsync($"{apiUrl}/{id}");
-
-				if (response.IsSuccessStatusCode)
-
-				{
-
-					var jsonResponse = await response.Content.ReadAsStringAsync();
-
-					var events = JsonConvert.DeserializeObject<Event>(jsonResponse);
-
-					return View(events);
-
-				}
-
-				return RedirectToAction("Index"); // Redirige si algo falla
-
-			}
-
-		}
-
-		[HttpPost]
-
-		public async Task<IActionResult> Editar(Event events)
-
-		{
-
-			using (var httpClient = new HttpClient())
-
-			{
-
-				var content = new StringContent(JsonConvert.SerializeObject(events), Encoding.UTF8, "application/json");
-
-				var response = await httpClient.PutAsync($"{apiUrl}/{events.IdEvent}", content);
-
-				if (response.IsSuccessStatusCode)
-
-				{
-
-					return RedirectToAction("Index");
-
-				}
-
-				return View(events); // Retorna a la vista si algo falla
-
-			}
-
-		}
-
-		public async Task<IActionResult> Eliminar(int id)
-
-		{
-
-			using (var httpClient = new HttpClient())
-
-			{
-
-				var response = await httpClient.DeleteAsync($"{apiUrl}/{id}");
-
-				if (response.IsSuccessStatusCode)
-
-				{
-
-					return RedirectToAction("Index");
-
-				}
-
-				return RedirectToAction("Index"); // Redirige si algo falla
-
-			}
-
-		}
-
-
-
-	}
-
+    [Route("api/[controller]")]
+    [ApiController]
+    public class EventsController : ControllerBase
+    {
+        private readonly ApplicationDbContext _context;
+
+        public EventsController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Event>>> GetEvents()
+        {
+            return await _context.Events.ToListAsync();
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Event>> GetEvent(int id)
+        {
+            var ev = await _context.Events.FirstOrDefaultAsync(e => e.IdEvent == id);
+
+            if (ev == null)
+                return NotFound();
+
+            return ev;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Event>> PostEvent(Event ev)
+        {
+            _context.Events.Add(ev);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetEvent), new { id = ev.IdEvent }, ev);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutEvent(int id, Event ev)
+        {
+            if (id != ev.IdEvent)
+                return BadRequest();
+
+            _context.Entry(ev).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.Events.Any(e => e.IdEvent == id))
+                    return NotFound();
+                else
+                    throw;
+            }
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteEvent(int id)
+        {
+            var ev = await _context.Events.FirstOrDefaultAsync(e => e.IdEvent == id);
+            if (ev == null)
+                return NotFound();
+
+            _context.Events.Remove(ev);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+    }
 }

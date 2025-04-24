@@ -114,7 +114,6 @@
                     background-color: #eee;
                 }
 
-        /* Responsive */
         @media screen and (max-width: 768px) {
             table, thead, tbody, th, td, tr {
                 display: block;
@@ -147,7 +146,6 @@
     </style>
 </head>
 <body>
-
     <div class="volver-home">
         <button onclick="toggleMenu()" class="btn-home">Volver al Home</button>
         <div id="menuOpciones" class="menu-dropdown">
@@ -156,10 +154,9 @@
         </div>
     </div>
 
-    <!-- EVENTOS -->
     <div class="panel">
         <h3>Eventos</h3>
-        <a href="crear-evento.html" class="btn-home">Crear Evento</a>
+        <a href="crear-evento.html" class="btn-home" onclick="localStorage.removeItem('eventoEditarId')">Crear Evento</a>
         <table id="tablaEventos">
             <thead>
                 <tr>
@@ -178,10 +175,9 @@
         </table>
     </div>
 
-    <!-- ORGANIZADORES -->
     <div class="panel">
         <h3>Organizadores</h3>
-        <a href="crear-organizador.html" class="btn-home">Crear Organizador</a>
+        <a href="crear-organizador.html" class="btn-home" onclick="localStorage.removeItem('organizadorEditarId')">Crear Organizador</a>
         <table id="tablaOrganizadores">
             <thead>
                 <tr>
@@ -207,91 +203,102 @@
         }
 
         window.addEventListener("DOMContentLoaded", () => {
-            const eventos = JSON.parse(localStorage.getItem("eventos")) || [];
-            const organizadores = JSON.parse(localStorage.getItem("organizadores")) || [];
-
             const tbodyEventos = document.querySelector("#tablaEventos tbody");
             const tbodyOrgs = document.querySelector("#tablaOrganizadores tbody");
 
             function renderEventos() {
                 tbodyEventos.innerHTML = "";
-                eventos.forEach((ev, index) => {
-                    const fila = document.createElement("tr");
-                    fila.innerHTML = `
-                <td data-label="Eventos">${ev.nombre}</td>
-                <td data-label="Categoría">${ev.categoria}</td>
-                <td data-label="Organizador">${ev.organizador}</td>
-                <td data-label="Descripción">${ev.descripcion}</td>
-                <td data-label="Fecha">${ev.fecha}</td>
-                <td data-label="Ubicación">${ev.ubicacion}</td>
-                <td data-label="Capacidad">${ev.capacidad}</td>
-                <td data-label="Precio">$${ev.precio}</td>
-                <td data-label="Acciones">
-                  <div class="acciones" style="display: none;">
-                    <button class="btn-home btn-editar" data-index="${index}">Editar</button>
-                    <button class="btn-home btn-eliminar" data-index="${index}">Eliminar</button>
-                  </div>
-                </td>`;
-                    fila.addEventListener("mouseenter", () => fila.querySelector(".acciones").style.display = "inline-block");
-                    fila.addEventListener("mouseleave", () => fila.querySelector(".acciones").style.display = "none");
-                    tbodyEventos.appendChild(fila);
-                });
 
-                document.querySelectorAll(".btn-eliminar").forEach(btn => {
-                    btn.addEventListener("click", () => {
-                        const index = btn.getAttribute("data-index");
-                        eventos.splice(index, 1);
-                        localStorage.setItem("eventos", JSON.stringify(eventos));
-                        renderEventos();
-                    });
-                });
+                fetch("http://localhost:5280/api/Events")
+                    .then(res => res.json())
+                    .then(eventos => {
+                        eventos.forEach(ev => {
+                            const fila = document.createElement("tr");
+                            fila.innerHTML = `
+                                    <td data-label="Eventos">Evento #${ev.idEvent}</td>
+                                    <td data-label="Categoría">${ev.idEventCategory}</td>
+                                    <td data-label="Organizador">${ev.idOrganizer}</td>
+                                    <td data-label="Descripción">${ev.description}</td>
+                                    <td data-label="Fecha">${ev.date.split("T")[0]}</td>
+                                    <td data-label="Ubicación">${ev.location}</td>
+                                    <td data-label="Capacidad">${ev.capacity}</td>
+                                    <td data-label="Precio">$${ev.price}</td>
+                                    <td data-label="Acciones">
+                                        <div class="acciones" style="display: none;">
+                                            <button class="btn-home btn-editar" data-id="${ev.idEvent}">Editar</button>
+                                            <button class="btn-home btn-eliminar" data-id="${ev.idEvent}">Eliminar</button>
+                                        </div>
+                                    </td>
+                                `;
+                            fila.addEventListener("mouseenter", () => fila.querySelector(".acciones").style.display = "inline-block");
+                            fila.addEventListener("mouseleave", () => fila.querySelector(".acciones").style.display = "none");
+                            tbodyEventos.appendChild(fila);
+                        });
 
-                document.querySelectorAll(".btn-editar").forEach(btn => {
-                    btn.addEventListener("click", () => {
-                        const index = btn.getAttribute("data-index");
-                        localStorage.setItem("eventoEditar", index);
-                        window.location.href = "crear-evento.html";
+                        document.querySelectorAll(".btn-editar").forEach(btn => {
+                            btn.addEventListener("click", () => {
+                                const id = btn.getAttribute("data-id");
+                                localStorage.setItem("eventoEditarId", id);
+                                window.location.href = "crear-evento.html";
+                            });
+                        });
+
+                        document.querySelectorAll(".btn-eliminar").forEach(btn => {
+                            btn.addEventListener("click", () => {
+                                const id = btn.getAttribute("data-id");
+                                if (confirm("¿Eliminar este evento?")) {
+                                    fetch(`http://localhost:5280/api/Events/${id}`, {
+                                        method: 'DELETE'
+                                    }).then(() => renderEventos());
+                                }
+                            });
+                        });
                     });
-                });
             }
 
             function renderOrganizadores() {
                 tbodyOrgs.innerHTML = "";
-                organizadores.forEach((org, index) => {
-                    const fila = document.createElement("tr");
-                    fila.innerHTML = `
-                <td data-label="Nombre">${org.nombre}</td>
-                <td data-label="Email">${org.email}</td>
-                <td data-label="Teléfono">${org.telefono}</td>
-                <td data-label="Acciones">
-                  <div class="acciones" style="display: none;">
-                    <button class="btn-home btn-editar-org" data-index="${index}">Editar</button>
-                    <button class="btn-home btn-eliminar-org" data-index="${index}">Eliminar</button>
-                  </div>
-                </td>`;
-                    fila.addEventListener("mouseenter", () => fila.querySelector(".acciones").style.display = "inline-block");
-                    fila.addEventListener("mouseleave", () => fila.querySelector(".acciones").style.display = "none");
-                    tbodyOrgs.appendChild(fila);
-                });
 
-                document.querySelectorAll(".btn-eliminar-org").forEach(btn => {
-                    btn.addEventListener("click", () => {
-                        const index = btn.getAttribute("data-index");
-                        if (confirm("¿Eliminar este organizador?")) {
-                            organizadores.splice(index, 1);
-                            localStorage.setItem("organizadores", JSON.stringify(organizadores));
-                            renderOrganizadores();
-                        }
-                    });
-                });
+                fetch("http://localhost:5280/api/Organizers")
+                    .then(res => res.json())
+                    .then(organizadores => {
+                        organizadores.forEach(org => {
+                            const fila = document.createElement("tr");
+                            fila.innerHTML = `
+                                    <td data-label="Nombre">${org.name}</td>
+                                    <td data-label="Email">${org.email}</td>
+                                    <td data-label="Teléfono">${org.phone}</td>
+                                    <td data-label="Acciones">
+                                        <div class="acciones" style="display: none;">
+                                            <button class="btn-home btn-editar-org" data-id="${org.idOrganizer}">Editar</button>
+                                            <button class="btn-home btn-eliminar-org" data-id="${org.idOrganizer}">Eliminar</button>
+                                        </div>
+                                    </td>
+                                `;
+                            fila.addEventListener("mouseenter", () => fila.querySelector(".acciones").style.display = "inline-block");
+                            fila.addEventListener("mouseleave", () => fila.querySelector(".acciones").style.display = "none");
+                            tbodyOrgs.appendChild(fila);
+                        });
 
-                document.querySelectorAll(".btn-editar-org").forEach(btn => {
-                    btn.addEventListener("click", () => {
-                        const index = btn.getAttribute("data-index");
-                        localStorage.setItem("organizadorEditar", index);
-                        window.location.href = "crear-organizador.html";
+                        document.querySelectorAll(".btn-editar-org").forEach(btn => {
+                            btn.addEventListener("click", () => {
+                                const id = btn.getAttribute("data-id");
+                                localStorage.setItem("organizadorEditarId", id);
+                                window.location.href = "crear-organizador.html";
+                            });
+                        });
+
+                        document.querySelectorAll(".btn-eliminar-org").forEach(btn => {
+                            btn.addEventListener("click", () => {
+                                const id = btn.getAttribute("data-id");
+                                if (confirm("¿Eliminar este organizador?")) {
+                                    fetch(`http://localhost:5280/api/Organizers/${id}`, {
+                                        method: 'DELETE'
+                                    }).then(() => renderOrganizadores());
+                                }
+                            });
+                        });
                     });
-                });
             }
 
             renderEventos();

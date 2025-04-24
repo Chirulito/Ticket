@@ -9,7 +9,6 @@
             --verde-agua: #20c997;
             --celeste: #17a2b8;
             --blanco: #f8f9fa;
-            --gris: #343a40;
         }
 
         body {
@@ -95,13 +94,13 @@
             <label for="categoria">Categoría:</label>
             <select id="categoria" name="categoria" required>
                 <option value="">Seleccionar</option>
-                <option value="Concierto">Concierto</option>
-                <option value="Teatro">Teatro</option>
-                <option value="Festival">Festival</option>
+                <option value="1">Concierto</option>
+                <option value="2">Teatro</option>
+                <option value="3">Festival</option>
             </select>
 
-            <label for="organizador">Organizador:</label>
-            <input type="text" id="organizador" name="organizador" required>
+            <label for="organizador">Organizador (ID numérico):</label>
+            <input type="number" id="organizador" name="organizador" required>
 
             <label for="descripcion">Descripción:</label>
             <textarea id="descripcion" name="descripcion" rows="4"></textarea>
@@ -126,54 +125,73 @@
 
     <script>
         const form = document.getElementById("formEvento");
-        const editIndex = localStorage.getItem("eventoEditar");
-        const eventos = JSON.parse(localStorage.getItem("eventos")) || [];
+        const idEditar = localStorage.getItem("eventoEditarId");
+        const API_URL = "http://localhost:5280/api/Events";
 
-        // Si estamos en modo edición
-        if (editIndex !== null) {
-            const evento = eventos[editIndex];
-
-            if (evento) {
-                document.getElementById("nombre").value = evento.nombre;
-                document.getElementById("categoria").value = evento.categoria;
-                document.getElementById("organizador").value = evento.organizador;
-                document.getElementById("descripcion").value = evento.descripcion;
-                document.getElementById("fecha").value = evento.fecha;
-                document.getElementById("ubicacion").value = evento.ubicacion;
-                document.getElementById("capacidad").value = evento.capacidad;
-                document.getElementById("precio").value = evento.precio;
-            }
+        if (idEditar) {
+            // Modo edición: obtener datos de la API
+            fetch(`${API_URL}/${idEditar}`)
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById("nombre").value = data.name || "";
+                    document.getElementById("categoria").value = data.idEventCategory;
+                    document.getElementById("organizador").value = data.idOrganizer;
+                    document.getElementById("descripcion").value = data.description;
+                    document.getElementById("fecha").value = data.date.split("T")[0];
+                    document.getElementById("ubicacion").value = data.location;
+                    document.getElementById("capacidad").value = data.capacity;
+                    document.getElementById("precio").value = data.price;
+                })
+                .catch(err => console.error("❌ Error al cargar el evento:", err));
         }
 
         form.addEventListener("submit", function (e) {
             e.preventDefault();
 
             const nuevoEvento = {
-                nombre: document.getElementById("nombre").value,
-                categoria: document.getElementById("categoria").value,
-                organizador: document.getElementById("organizador").value,
-                descripcion: document.getElementById("descripcion").value,
-                fecha: document.getElementById("fecha").value,
-                ubicacion: document.getElementById("ubicacion").value,
-                capacidad: document.getElementById("capacidad").value,
-                precio: document.getElementById("precio").value
+                name: document.getElementById("nombre").value,
+                idEventCategory: parseInt(document.getElementById("categoria").value),
+                idOrganizer: parseInt(document.getElementById("organizador").value),
+                description: document.getElementById("descripcion").value,
+                date: document.getElementById("fecha").value,
+                location: document.getElementById("ubicacion").value,
+                capacity: parseInt(document.getElementById("capacidad").value),
+                price: parseFloat(document.getElementById("precio").value)
             };
 
-            if (editIndex !== null) {
-                // Actualizar evento existente
-                eventos[editIndex] = nuevoEvento;
-                localStorage.removeItem("eventoEditar"); // limpiar modo edición
+            if (idEditar) {
+                // Actualizar en API
+                fetch(`${API_URL}/${idEditar}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ...nuevoEvento, idEvent: parseInt(idEditar) })
+                })
+                    .then(res => {
+                        if (!res.ok) throw new Error("❌ Error al actualizar en API");
+                        alert("✅ Evento actualizado correctamente.");
+                        localStorage.removeItem("eventoEditarId");
+                        window.location.href = "admin.html";
+                    })
+                    .catch(err => console.error(err));
             } else {
-                // Nuevo evento
-                eventos.push(nuevoEvento);
+                // Crear nuevo en API
+                fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(nuevoEvento)
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        alert("✅ Evento creado correctamente.");
+                        window.location.href = "admin.html";
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        alert("❌ Error al guardar evento.");
+                    });
             }
-
-            localStorage.setItem("eventos", JSON.stringify(eventos));
-            alert("✅ Evento guardado correctamente.");
-            window.location.href = "Admin.html";
         });
     </script>
-
 
 </body>
 </html>

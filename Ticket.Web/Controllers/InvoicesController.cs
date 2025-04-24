@@ -1,186 +1,86 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Text;
-using API.Models;
-using Newtonsoft.Json;
+using Microsoft.EntityFrameworkCore;
+using Ticket.Web.Models;
 
 namespace Ticket.Web.Controllers
 {
-	public class InvoicesController : Controller
-
-	{
-
-		private readonly string apiUrl = "http://localhost:5280/api/Invoices";
-
-		public async Task<IActionResult> Index()
-
-		{
-
-			using (var httpClient = new HttpClient())
-
-			{
-
-				// Llamada a la API
-
-				var response = await httpClient.GetAsync("http://localhost:5280/api/Invoices");
-
-				if (response.IsSuccessStatusCode)
-
-				{
-
-					// Obtener el contenido JSON de la respuesta
-
-					var jsonResponse = await response.Content.ReadAsStringAsync();
-
-					// Deserializar el JSON en una lista de Invoices
-
-					var invoices = JsonConvert.DeserializeObject<List<Invoice>>(jsonResponse);
-
-					// Validar que el modelo nunca sea nulo
-
-					if (invoices == null)
-
-					{
-
-						invoices = new List<Invoice>();
-
-					}
-
-					return View(invoices); // Enviar datos a la vista
-
-				}
-
-				else
-
-				{
-
-					// Manejo de error si la API no responde correctamente
-
-					return View(new List<Invoice>()); // Lista vacía en caso de error
-
-				}
-
-			}
-
-		}
-
-		public IActionResult Crear()
-
-		{
-
-			return View();
-
-		}
-
-		[HttpPost]
-
-		public async Task<IActionResult> Crear(Invoice invoices)
-
-		{
-
-			using (var httpClient = new HttpClient())
-
-			{
-
-				var content = new StringContent(JsonConvert.SerializeObject(invoices), Encoding.UTF8, "application/json");
-
-				var response = await httpClient.PostAsync(apiUrl, content);
-
-				if (response.IsSuccessStatusCode)
-
-				{
-
-					return RedirectToAction("Index");
-
-				}
-
-				return View(invoices); // Retorna a la vista si algo falla
-
-			}
-
-		}
-
-		public async Task<IActionResult> Editar(int id)
-
-		{
-
-			using (var httpClient = new HttpClient())
-
-			{
-
-				var response = await httpClient.GetAsync($"{apiUrl}/{id}");
-
-				if (response.IsSuccessStatusCode)
-
-				{
-
-					var jsonResponse = await response.Content.ReadAsStringAsync();
-
-					var invoices = JsonConvert.DeserializeObject<Invoice>(jsonResponse);
-
-					return View(invoices);
-
-				}
-
-				return RedirectToAction("Index"); // Redirige si algo falla
-
-			}
-
-		}
-
-		[HttpPost]
-
-		public async Task<IActionResult> Editar(Invoice invoices)
-
-		{
-
-			using (var httpClient = new HttpClient())
-
-			{
-
-				var content = new StringContent(JsonConvert.SerializeObject(invoices), Encoding.UTF8, "application/json");
-
-				var response = await httpClient.PutAsync($"{apiUrl}/{invoices.IdInvoice}", content);
-
-				if (response.IsSuccessStatusCode)
-
-				{
-
-					return RedirectToAction("Index");
-
-				}
-
-				return View(invoices); // Retorna a la vista si algo falla
-
-			}
-
-		}
-
-		public async Task<IActionResult> Eliminar(int id)
-
-		{
-
-			using (var httpClient = new HttpClient())
-
-			{
-
-				var response = await httpClient.DeleteAsync($"{apiUrl}/{id}");
-
-				if (response.IsSuccessStatusCode)
-
-				{
-
-					return RedirectToAction("Index");
-
-				}
-
-				return RedirectToAction("Index"); // Redirige si algo falla
-
-			}
-
-		}
-
-
-
-	}
-
+    [Route("api/[controller]")]
+    [ApiController]
+    public class InvoicesController : ControllerBase
+    {
+        private readonly ApplicationDbContext _context;
+
+        public InvoicesController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        // GET: api/Invoices
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Invoice>>> GetInvoices()
+        {
+            return await _context.Invoices.ToListAsync();
+        }
+
+        // GET: api/Invoices/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Invoice>> GetInvoice(int id)
+        {
+            var invoice = await _context.Invoices.FindAsync(id);
+
+            if (invoice == null)
+                return NotFound();
+
+            return invoice;
+        }
+
+        // POST: api/Invoices
+        [HttpPost]
+        public async Task<ActionResult<Invoice>> PostInvoice(Invoice invoice)
+        {
+            invoice.PurchaseDate = DateTime.Now;
+            _context.Invoices.Add(invoice);
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetInvoice), new { id = invoice.IdInvoice }, invoice);
+        }
+
+
+        // PUT: api/Invoices/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutInvoice(int id, Invoice invoice)
+        {
+            if (id != invoice.IdInvoice)
+                return BadRequest();
+
+            _context.Entry(invoice).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.Invoices.Any(e => e.IdInvoice == id))
+                    return NotFound();
+                else
+                    throw;
+            }
+
+            return NoContent();
+        }
+
+        // DELETE: api/Invoices/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteInvoice(int id)
+        {
+            var invoice = await _context.Invoices.FindAsync(id);
+            if (invoice == null)
+                return NotFound();
+
+            _context.Invoices.Remove(invoice);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+    }
 }

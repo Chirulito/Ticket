@@ -84,7 +84,6 @@
     </style>
 </head>
 <body>
-
     <div class="form-container">
         <h1>Crear Nuevo Organizador</h1>
         <form id="formOrganizador">
@@ -100,7 +99,7 @@
             <button type="submit" class="btn">Guardar Organizador</button>
         </form>
 
-        <a href="admin.html" class="volver">← Volver al Panel Admin</a>
+        <a href="admin.html" class="volver">&larr; Volver al Panel Admin</a>
     </div>
 
     <script>
@@ -109,38 +108,51 @@
         const telefono = document.getElementById("telefono");
         const form = document.getElementById("formOrganizador");
 
-        const organizadores = JSON.parse(localStorage.getItem("organizadores")) || [];
-        const indexEditar = localStorage.getItem("organizadorEditar");
+        const idEditar = localStorage.getItem("organizadorEditarId");
 
-        if (indexEditar !== null) {
-            const org = organizadores[indexEditar];
-            if (org) {
-                nombre.value = org.nombre;
-                email.value = org.email;
-                telefono.value = org.telefono;
-            }
+        if (idEditar) {
+            fetch(`http://localhost:5280/api/Organizers/${idEditar}`)
+                .then(res => res.json())
+                .then(data => {
+                    nombre.value = data.name;
+                    email.value = data.email;
+                    telefono.value = data.phoneNumber;
+                });
         }
 
         form.addEventListener("submit", (e) => {
             e.preventDefault();
 
             const nuevoOrg = {
-                nombre: nombre.value.trim(),
+                name: nombre.value.trim(),
                 email: email.value.trim(),
-                telefono: telefono.value.trim()
+                phoneNumber: telefono.value.trim()
             };
 
-            if (indexEditar !== null) {
-                organizadores[indexEditar] = nuevoOrg;
-                localStorage.removeItem("organizadorEditar");
-            } else {
-                organizadores.push(nuevoOrg);
-            }
+            const metodo = idEditar ? 'PUT' : 'POST';
+            const url = idEditar
+                ? `http://localhost:5280/api/Organizers/${idEditar}`
+                : 'http://localhost:5280/api/Organizers';
 
-            localStorage.setItem("organizadores", JSON.stringify(organizadores));
-            window.location.href = "admin.html";
+            fetch(url, {
+                method: metodo,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(nuevoOrg)
+            })
+                .then(res => {
+                    if (!res.ok) throw new Error("Error en la operación");
+                    return res.json();
+                })
+                .then(() => {
+                    alert(idEditar ? "✅ Organizador actualizado." : "✅ Organizador creado.");
+                    localStorage.removeItem("organizadorEditarId");
+                    window.location.href = "admin.html";
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert("❌ Ocurrió un error.");
+                });
         });
     </script>
-
 </body>
 </html>

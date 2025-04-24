@@ -1,36 +1,37 @@
-﻿@using API.Models;
-@model Invoice
+﻿@using Ticket.Web.Models
+@model Ticket.Web.Models.Invoice
 
-<h1>Insertar Factura</h1>
+<h2>Crear Compra</h2>
 
 <form asp-action="Crear" method="post">
-	<div>
-		<label>ID de Usuario</label>
-		<input asp-for="IdUser" class="form-control" />
-	</div>
-	<div>
-		<label>ID de Categoria de Pago</label>
-		<input asp-for="IdPaymentCategory" class="form-control" />
-	</div>
-	<div>
-		<label>Fecha</label>
-		<input asp-for="Date" class="form-control" />
-	</div>
-	<div>
-		<label>Descuento</label>
-		<input asp-for="Discount" class="form-control" />
-	</div>
-	<div>
-		<label>Impuesto</label>
-		<input asp-for="Tax" class="form-control" />
-	</div>
-	<div>
-		<label>Subtotal</label>
-		<input asp-for="Subtotal" class="form-control" />
-	</div>
-	<div>
-		<label>Total</label>
-		<input asp-for="Total" class="form-control" />
-	</div>
-	<button type="submit" class="btn btn-primary">Guardar</button>
+    <div>
+        <label>Nombre completo</label>
+        <input asp-for="FullName" class="form-control" />
+    </div>
+    <div>
+        <label>Email</label>
+        <input asp-for="Email" class="form-control" />
+    </div>
+    <div>
+        <label>Evento</label>
+        <input asp-for="EventName" class="form-control" />
+    </div>
+    <div>
+        <label>Cantidad de Entradas</label>
+        <input asp-for="Quantity" class="form-control" />
+    </div>
+    <div>
+        <label>Asiento</label>
+        <input asp-for="Seat" class="form-control" />
+    </div>
+    <div>
+        <label>Método de Pago</label>
+        <input asp-for="PaymentMethod" class="form-control" />
+    </div>
+    <div>
+        <label>Fecha de Compra</label>
+        <input asp-for="PurchaseDate" class="form-control" type="date" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
 </form>

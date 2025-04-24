@@ -1,91 +1,28 @@
-﻿@using API.Models;
-@model List<User>
-
-@{
-	Layout = "_Layout";
-}
+﻿@using Ticket.Web.Models
+@model IEnumerable<Ticket.Web.Models.User>
 
 
 
-<div class="col-md-12">
+<h1>Lista de Usuarios</h1>
 
-
-	<div class="card">
-		@*<div class="card-header">
-		<h6 class="card-title">Recepción de Documentos</h6>
-		</div>*@
-
-		<div class="card-body">
-
-			<div class="row">
-				<div class="col-sm-6">
-					<label>Usuarios</label>
-				</div>
-			</div>
-
-			<div class="row">
-				<div class="col-sm-12">
-					<div class="form-group">
-						<a button type="button" class="btn btn-sm" style="background-color:#001f3f;color:#ffffff" id="Btn" asp-area="" asp-controller="Users" asp-action="Crear">Crear Usuarios</a>
-
-					</div>
-
-				</div>
-
-			</div> <!-- Div de Row-->
-
-			<hr style="size:1px">
-
-
-			<div class="row">
-
-				<table id="users" class="display dataTable" style="width:100%">
-					<thead>
-						<tr>
-							<th>IdUser</th>
-							<th>Identification</th>
-							<th>FirstName</th>
-							<th>LastName1</th>
-							<th>LastName2</th>
-							<th>Phone</th>
-							<th>BirthDate</th>
-							<th>Email</th>
-							<th>Username</th>
-						</tr>
-					</thead>
-					<tbody>
-						@foreach (var user in Model)
-						{
-							<tr>
-								<td>@user.IdUser</td>
-								<td>@user.Identification</td>
-								<td>@user.FirstName</td>
-								<td>@user.LastName1</td>
-								<td>@user.LastName2</td>
-								<td>@user.Phone</td>
-								<td>@user.BirthDate</td>
-								<td>@user.Email</td>
-								<td>@user.Username</td>
-								<td>
-									<a button type="button" class="btn btn-success" id="Btn" asp-area="" asp-controller="Users" asp-action="Editar" asp-route-id="@user.IdUser">Editar Usuarios</a>
-									<a button type="button" class="btn btn-danger" id="Btn" asp-area="" asp-controller="Users" asp-action="Eliminar" asp-route-id="@user.IdUser">Eliminar Usuarios</a>
-
-								</td>
-							</tr>
-						}
-					</tbody>
-				</table>
-			</div> <!-- Div de Row-->
-			<hr style="size:1px">
-		</div>
-	</div>
-</div>
-
-
-
-
-@* }
-else
-{
-<p>No hay usuarios disponibles.</p>
-} *@
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Contraseña</th>
+            <th>Provincia</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Email</td>
+                <td>@item.Password</td>
+                <td>@item.Province</td>
+            </tr>
+        }
+    </tbody>
+</table>

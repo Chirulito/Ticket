@@ -1,5 +1,6 @@
-﻿@using API.Models;
-@model Organizer
+﻿@using Ticket.Web.Models
+@model Ticket.Web.Models.Organizer
+
 
 <h1>Insertar Organizador</h1>
 
@@ -13,7 +14,7 @@
 		<input asp-for="Email" class="form-control" />
 	</div>
 	<div>
-		<label>Numero de Telefono</label>
+		<label>Teléfono</label>
 		<input asp-for="Phone" class="form-control" />
 	</div>
 	<button type="submit" class="btn btn-primary">Guardar</button>

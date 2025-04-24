@@ -1,186 +1,111 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Text;
-using API.Models;
-using Newtonsoft.Json;
+using Microsoft.EntityFrameworkCore;
+using Ticket.Web.Models;
 
 namespace Ticket.Web.Controllers
 {
-	public class UsersController : Controller
-
-	{
-
-		private readonly string apiUrl = "http://localhost:5280/api/Users";
-
-		public async Task<IActionResult> Index()
-
-		{
-
-			using (var httpClient = new HttpClient())
-
-			{
-
-				// Llamada a la API
-
-				var response = await httpClient.GetAsync("http://localhost:5280/api/Users");
-
-				if (response.IsSuccessStatusCode)
-
-				{
-
-					// Obtener el contenido JSON de la respuesta
-
-					var jsonResponse = await response.Content.ReadAsStringAsync();
-
-					// Deserializar el JSON en una lista de User
-
-					var users = JsonConvert.DeserializeObject<List<User>>(jsonResponse);
-
-					// Validar que el modelo nunca sea nulo
-
-					if (users == null)
-
-					{
-
-						users = new List<User>();
-
-					}
-
-					return View(users); // Enviar datos a la vista
-
-				}
-
-				else
-
-				{
-
-					// Manejo de error si la API no responde correctamente
-
-					return View(new List<User>()); // Lista vacía en caso de error
-
-				}
-
-			}
-
-		}
-
-		public IActionResult Crear()
-
-		{
-
-			return View();
-
-		}
-
-		[HttpPost]
-
-		public async Task<IActionResult> Crear(User user)
-
-		{
-
-			using (var httpClient = new HttpClient())
-
-			{
-
-				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
-
-				var response = await httpClient.PostAsync(apiUrl, content);
-
-				if (response.IsSuccessStatusCode)
-
-				{
-
-					return RedirectToAction("Index");
-
-				}
-
-				return View(user); // Retorna a la vista si algo falla
-
-			}
-
-		}
-
-		public async Task<IActionResult> Editar(int id)
-
-		{
-
-			using (var httpClient = new HttpClient())
-
-			{
-
-				var response = await httpClient.GetAsync($"{apiUrl}/{id}");
-
-				if (response.IsSuccessStatusCode)
-
-				{
-
-					var jsonResponse = await response.Content.ReadAsStringAsync();
-
-					var user = JsonConvert.DeserializeObject<User>(jsonResponse);
-
-					return View(user);
-
-				}
-
-				return RedirectToAction("Index"); // Redirige si algo falla
-
-			}
-
-		}
-
-		[HttpPost]
-
-		public async Task<IActionResult> Editar(User user)
-
-		{
-
-			using (var httpClient = new HttpClient())
-
-			{
-
-				var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
-
-				var response = await httpClient.PutAsync($"{apiUrl}/{user.IdUser}", content);
-
-				if (response.IsSuccessStatusCode)
-
-				{
-
-					return RedirectToAction("Index");
-
-				}
-
-				return View(user); // Retorna a la vista si algo falla
-
-			}
-
-		}
-
-		public async Task<IActionResult> Eliminar(int id)
-
-		{
-
-			using (var httpClient = new HttpClient())
-
-			{
-
-				var response = await httpClient.DeleteAsync($"{apiUrl}/{id}");
-
-				if (response.IsSuccessStatusCode)
-
-				{
-
-					return RedirectToAction("Index");
-
-				}
-
-				return RedirectToAction("Index"); // Redirige si algo falla
-
-			}
-
-		}
-
-
-
-	}
-
+    [Route("api/[controller]")]
+    [ApiController]
+    public class UsersController : ControllerBase
+    {
+        private readonly ApplicationDbContext _context;
+
+        public UsersController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        // GET: api/Users
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        {
+            return await _context.Users.ToListAsync();
+        }
+
+        // GET: api/Users/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<User>> GetUser(int id)
+        {
+            var user = await _context.Users.FindAsync(id);
+
+            if (user == null)
+                return NotFound();
+
+            return user;
+        }
+
+        // POST: api/Users
+        [HttpPost]
+        public async Task<ActionResult<User>> PostUser(User user)
+        {
+            // Verifica si ya existe un correo registrado
+            if (await _context.Users.AnyAsync(u => u.Email == user.Email))
+            {
+                return Conflict(new { message = "El correo ya está registrado." });
+            }
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetUser), new { id = user.IdUser }, user);
+        }
+
+
+        // PUT: api/Users/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutUser(int id, User user)
+        {
+            if (id != user.IdUser)
+                return BadRequest();
+
+            _context.Entry(user).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.Users.Any(e => e.IdUser == id))
+                    return NotFound();
+                else
+                    throw;
+            }
+
+            return NoContent();
+        }
+
+        // DELETE: api/Users/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+                return NotFound();
+
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        // POST: api/Users/login
+        [HttpPost("login")]
+        public async Task<ActionResult<User>> Login(LoginRequest request)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Email == request.Email && u.Password == request.Password);
+
+            if (user == null)
+                return Unauthorized(new { message = "Credenciales inválidas" });
+
+            return Ok(user);
+        }
+
+        public class LoginRequest
+        {
+            public string Email { get; set; } = string.Empty;
+            public string Password { get; set; } = string.Empty;
+        }
+    }
 }
